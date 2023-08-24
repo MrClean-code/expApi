@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  app:
+    build: ./
+    container_name: 'java-app-expApi'
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/web
+    ports:
+      - "8080:8080"
+    links:
+      - postgres
+    depends_on:
+      - postgres

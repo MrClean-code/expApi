@@ -1,13 +1,17 @@
 package com.procture.expapi.entity;
 
-import com.procture.expapi.dto.DataCsvDto;
-import lombok.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.procture.expapi.converter.JsonStringType;
+import lombok.Data;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 
 @Data
 @Entity
 @Table(name = "dataCsv", schema = "public")
+@TypeDef(name = "json", typeClass = JsonStringType.class)
 public class DataCsv {
 
     @Id
@@ -22,6 +26,7 @@ public class DataCsv {
     private String title;
 
     @Column(name = "data", columnDefinition = "text")
-    private String data;
+    @Type(type = "json")
+    private JsonNode data;
 
 }

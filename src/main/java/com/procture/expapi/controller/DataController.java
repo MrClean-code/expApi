@@ -1,18 +1,15 @@
 package com.procture.expapi.controller;
 
 import com.procture.expapi.dto.DataCsvDto;
-import com.procture.expapi.entity.DataCsv;
+import com.procture.expapi.dto.DataCsvFileDto;
 import com.procture.expapi.servise.DataService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/file")
@@ -31,8 +28,14 @@ public class DataController {
     }
 
     @GetMapping("/name-title")
-    private ResponseEntity<List<DataCsvDto>> getData(){
+    private ResponseEntity<List<DataCsvDto>> getDataNameTitle(){
         return new ResponseEntity<>(dataService.findNameAndTitle(),
+                HttpStatus.OK);
+    }
+
+    @GetMapping("")
+    private ResponseEntity<List<DataCsvFileDto>> getDataFile(){
+        return new ResponseEntity<>(dataService.findFileData(),
                 HttpStatus.OK);
     }
 }

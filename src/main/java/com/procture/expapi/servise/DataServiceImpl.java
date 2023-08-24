@@ -1,8 +1,10 @@
 package com.procture.expapi.servise;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVReader;
 import com.procture.expapi.dto.DataCsvDto;
+import com.procture.expapi.dto.DataCsvFileDto;
 import com.procture.expapi.entity.DataCsv;
 import com.procture.expapi.repository.DataRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +30,14 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
+    public List<DataCsvFileDto> findFileData() {
+        return dataRepository.findFileData();
+    }
+
+    @Override
     @Transactional
     public String save(MultipartFile file) {
-        String data = readCsvFileAndConvertToString(file);
+        JsonNode data = readCsvFileAndConvertToString(file);
         String name = file.getOriginalFilename();
         StringBuilder title = readCsvFileTitle(file);
 
@@ -65,7 +72,7 @@ public class DataServiceImpl implements DataService {
         }
     }
 
-    private String readCsvFileAndConvertToString(MultipartFile file) {
+    private JsonNode readCsvFileAndConvertToString(MultipartFile file) {
 
         try (CSVReader csvReader = new CSVReader(new InputStreamReader(file.getInputStream()))) {
             List<String[]> rows = csvReader.readAll();
@@ -83,7 +90,7 @@ public class DataServiceImpl implements DataService {
             }
 
             ObjectMapper objectMapper = new ObjectMapper();
-            String data = objectMapper.writeValueAsString(jsonDataList);
+            JsonNode data = objectMapper.valueToTree(jsonDataList);
 
             return data;
         } catch (IOException e) {

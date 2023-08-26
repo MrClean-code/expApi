@@ -2,13 +2,19 @@ package com.procture.expapi.entity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.procture.expapi.converter.JsonStringType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "dataCsv", schema = "public")
 @TypeDef(name = "json", typeClass = JsonStringType.class)

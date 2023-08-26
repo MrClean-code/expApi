@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,19 +36,29 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
+    public List<DataCsvFileDto> findFileDataForId(Long id) {
+        List<DataCsvFileDto> dataById = dataRepository.findFileData()
+                .stream()
+                .filter(file -> file.getId().equals(id))
+                .collect(Collectors.toList());
+        return dataById;
+    }
+
+    @Override
     @Transactional
-    public String save(MultipartFile file) {
+    public DataCsv createFile(MultipartFile file) {
         JsonNode data = readCsvFileAndConvertToString(file);
         String name = file.getOriginalFilename();
         StringBuilder title = readCsvFileTitle(file);
 
-        DataCsv dataCsv = new DataCsv();
-        dataCsv.setName(name);
-        dataCsv.setData(data);
-        dataCsv.setTitle(String.valueOf(title));
+        DataCsv dataCsv = DataCsv.builder()
+                .name(name)
+                .title(String.valueOf(title))
+                .data(data)
+                .build();
 
         dataRepository.save(dataCsv);
-        return "успешно добавлен " + file.getOriginalFilename();
+        return dataCsv;
     }
 
     private StringBuilder readCsvFileTitle(MultipartFile file){
@@ -65,7 +76,6 @@ public class DataServiceImpl implements DataService {
                     stringBuilder.append(headerRow[i]);
                 }
             }
-
             return stringBuilder;
         } catch (IOException e) {
             throw new RuntimeException(e);

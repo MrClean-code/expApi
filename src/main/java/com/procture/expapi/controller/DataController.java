@@ -2,6 +2,7 @@ package com.procture.expapi.controller;
 
 import com.procture.expapi.dto.DataCsvDto;
 import com.procture.expapi.dto.DataCsvFileDto;
+import com.procture.expapi.entity.DataCsv;
 import com.procture.expapi.servise.DataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,11 +20,11 @@ public class DataController {
     private final DataService dataService;
 
     @PostMapping( "/new")
-    public ResponseEntity<String> addFile(@RequestParam("fileCsv") MultipartFile file) {
+    public ResponseEntity<DataCsv> addFile(@RequestParam("fileCsv") MultipartFile file) {
         if (file == null || !file.getOriginalFilename().endsWith("csv")) {
             throw new NullPointerException("файл пуст или неверный формат");
         }
-        return new ResponseEntity(dataService.save(file),
+        return new ResponseEntity<>(dataService.createFile(file),
                 HttpStatus.CREATED);
     }
 

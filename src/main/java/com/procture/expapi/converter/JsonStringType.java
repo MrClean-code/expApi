@@ -95,8 +95,4 @@ public class JsonStringType implements UserType {
             throw new HibernateException("Error serializing JSON", e);
         }
     }
-
-    // Implement other methods if necessary
-
-    // ...
 }
